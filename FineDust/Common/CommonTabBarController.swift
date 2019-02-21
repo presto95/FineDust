@@ -12,14 +12,14 @@ final class CommonTabBarController: UITabBarController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-//    if let viewControllers = viewControllers {
-//      for (index, viewController) in viewControllers.enumerated() {
-//        if index == 1 {
-//          let navigationController = viewController as? UINavigationController
-//          let statisticsViewController = navigationController?.topViewController as? StatisticsViewController
-//          statisticsViewController?.reactor = StatisticsViewReactor()
-//        }
-//      }
-//    }
+    if let viewControllers = viewControllers {
+      for (index, viewController) in viewControllers.enumerated() {
+        if index == 1 {
+          let navigationController = viewController as? UINavigationController
+          let statisticsViewController = navigationController?.topViewController as? StatisticsViewController
+          statisticsViewController?.reactor = StatisticsViewReactor()
+        }
+      }
+    }
   }
 }

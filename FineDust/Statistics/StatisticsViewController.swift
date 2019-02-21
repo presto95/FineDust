@@ -8,8 +8,76 @@
 
 import UIKit
 
+import ReactorKit
+import RxCocoa
+import RxSwift
+import RxViewController
+
 /// 통계 관련 뷰 컨트롤러.
-final class StatisticsViewController: UIViewController {
+final class StatisticsViewController: UIViewController, StoryboardView {
+  
+  var disposeBag = DisposeBag()
+  
+  func bind(reactor: StatisticsViewReactor) {
+    
+    // 위치 정보 받아오기 성공 노티피케이션 바인드
+//    NotificationCenter.default.rx.notification(.didSuccessUpdatingAllLocationTasks)
+//      .map { _ in Reactor.Action.handleLocation }
+//      .bind(to: reactor.action)
+//      .disposed(by: disposeBag)
+    
+  
+    // viewDidAppear 바인드
+    rx.viewDidAppear
+      .map { _ in Reactor.Action.viewDidAppear }
+      .bind(to: reactor.action)
+      .disposed(by: disposeBag)
+    
+    // 세그먼티드 컨트롤 탭 바인드
+    segmentedControl.rx.selectedSegmentIndex
+      .map { Reactor.Action.changeSegmentedControlIndex($0) }
+      .bind(to: reactor.action)
+      .disposed(by: disposeBag)
+
+    
+    // viewDidAppear 상태 바인드.
+    reactor.state.map { $0.isPresented }
+      .filter { $0 }
+      .subscribe(onNext: { isPresented in
+        
+      })
+      .disposed(by: disposeBag)
+    
+    // 로딩 상태 바인드.
+    reactor.state.map { $0.isLoading }
+      .subscribe(onNext: { isLoading in
+        print("로딩중????????", isLoading)
+        if isLoading {
+          ProgressIndicator.shared.show()
+        } else {
+          ProgressIndicator.shared.hide()
+        }
+      })
+      .disposed(by: disposeBag)
+    
+    // 세그먼티드 컨트롤 인덱스 상태 바인드.
+    reactor.state.map { $0.segmentedControlIndex }
+      .subscribe(onNext: { index in
+        self.initializeSubviews()
+      })
+    
+    // 값 상태 바인드.
+    reactor.state.map { $0.values }
+      .subscribe(onNext: { totalFineDust, totalUltrafineDust, todayFineDust, todayUltrafineDust in
+        print("바인딩~~~", totalFineDust, totalUltrafineDust, todayFineDust, todayUltrafineDust)
+        self.fineDustTotalIntakes = totalFineDust
+        self.ultrafineDustTotalIntakes = totalUltrafineDust
+        self.todayFineDustIntake = todayFineDust
+        self.todayUltrafineDustIntake = todayUltrafineDust
+        //self.initializeSubviews()
+      })
+      .disposed(by: disposeBag)
+  }
   
   /// CALayer 관련 상수 정의.
   enum Layer {
@@ -31,13 +99,7 @@ final class StatisticsViewController: UIViewController {
   }
   
   /// 미세먼지 / 초미세먼지 토글하는 세그먼티드 컨트롤.
-  @IBOutlet private weak var segmentedControl: UISegmentedControl! {
-    didSet {
-      segmentedControl.addTarget(self,
-                                 action: #selector(segmentedControlValueDidChange(_:)),
-                                 for: .valueChanged)
-    }
-  }
+  @IBOutlet private weak var segmentedControl: UISegmentedControl!
   
   /// 값 그래프 배경 뷰.
   @IBOutlet private weak var valueGraphBackgroundView: UIView! {
@@ -80,7 +142,7 @@ final class StatisticsViewController: UIViewController {
   // MARK: Property
   
   /// 화면이 표시가 되었는가.
-  private var isPresented: Bool = false
+  //private var isPresented: Bool = false
   
   /// 7일간의 미세먼지 흡입량 모음.
   private var fineDustTotalIntakes = [Int](repeating: 1, count: 7)
@@ -93,9 +155,6 @@ final class StatisticsViewController: UIViewController {
   
   /// 오늘의 초미세먼지 흡입량.
   private var todayUltrafineDustIntake: Int = 1
-  
-  /// 흡입량 서비스 프로퍼티.
-  private let intakeService = IntakeService()
   
   /// 미세먼지의 전체에 대한 마지막 값의 비율
   private var fineDustLastValueRatio: Double {
@@ -113,85 +172,10 @@ final class StatisticsViewController: UIViewController {
     return Double(last) / Double(sum)
   }
   
-  // MARK: Life Cycle
-  
   override func viewDidLoad() {
     super.viewDidLoad()
     createSubviews()
     setConstraintsToSubviews()
-    registerLocationObserver()
-  }
-  
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    initializeValueGraphView()
-  }
-  
-  override func viewDidAppear(_ animated: Bool) {
-    super.viewDidAppear(animated)
-    initializeRatioGraphView()
-    // 한번 보여진 이후로는 비즈니스 로직을 수행하지 않음
-    if !isPresented {
-      isPresented.toggle()
-      requestIntake()
-    }
-  }
-  
-  deinit {
-    unregisterLocationObserver()
-  }
-  
-  /// 세그먼티드 컨트롤 값이 바뀌었을 때 호출됨.
-  @objc private func segmentedControlValueDidChange(_ sender: UISegmentedControl) {
-    initializeSubviews()
-  }
-  
-  /// 미세먼지 흡입량 요청.
-  private func requestIntake() {
-    self.intakeService.requestIntakesInWeek { [weak self] fineDusts, ultrafineDusts, error in
-      if let error = error as? ServiceErrorType {
-        error.presentToast()
-        return
-      }
-      guard let self = self else { return }
-      self.intakeService.requestTodayIntake { [weak self] fineDust, ultrafineDust, error in
-        if let error = error as? ServiceErrorType {
-          error.presentToast()
-          return
-        }
-        guard let self = self,
-          let fineDusts = fineDusts,
-          let ultrafineDusts = ultrafineDusts,
-          let fineDust = fineDust,
-          let ultrafineDust = ultrafineDust
-          else { return }
-        let fineDustWeekIntakes = [fineDusts, [fineDust]].flatMap { $0 }
-        let ultrafineDustWeekIntakes = [ultrafineDusts, [ultrafineDust]].flatMap { $0 }
-        self.todayFineDustIntake = fineDust
-        self.todayUltrafineDustIntake = ultrafineDust
-        self.fineDustTotalIntakes = fineDustWeekIntakes
-        self.ultrafineDustTotalIntakes = ultrafineDustWeekIntakes
-        print(fineDustWeekIntakes, ultrafineDustWeekIntakes)
-        DispatchQueue.main.async {
-          self.initializeSubviews()
-        }
-      }
-    }
-  }
-}
-
-// MARK: - LocationObserver 구현
-
-extension StatisticsViewController: LocationObserver {
-  
-  func handleIfSuccess(_ notification: Notification) {
-    // 탭바 컨트롤러의 현재 뷰컨트롤러가 해당 뷰컨트롤러일 때만 노티피케이션 성공 핸들러 로직을 수행함
-    let tabBarControllerCurrentViewController
-      = (tabBarController?.selectedViewController as? UINavigationController)?
-        .visibleViewController
-    if tabBarControllerCurrentViewController == self {
-      requestIntake()
-    }
   }
 }
 

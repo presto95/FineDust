@@ -28,15 +28,15 @@ final class NetworkManager: NetworkManagerType {
       urlRequest.httpBody = try? JSONSerialization.data(withJSONObject: parameters, options: [])
     }
     headers.forEach { urlRequest.setValue($0.value, forHTTPHeaderField: $0.key) }
-    DispatchQueue.main.async {
-      ProgressIndicator.shared.show()
-    }
+//    DispatchQueue.main.async {
+//      ProgressIndicator.shared.show()
+//    }
     let task = session.dataTask(with: urlRequest) { data, response, error in
       defer {
         session.finishTasksAndInvalidate()
-        DispatchQueue.main.async {
-          ProgressIndicator.shared.hide()
-        }
+//        DispatchQueue.main.async {
+//          ProgressIndicator.shared.hide()
+//        }
       }
       let statusCodeRawValue = (response as? HTTPURLResponse)?.statusCode ?? 0
       let statusCode = HTTPStatusCode(rawValue: statusCodeRawValue) ?? .default

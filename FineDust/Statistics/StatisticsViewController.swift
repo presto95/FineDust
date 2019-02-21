@@ -88,12 +88,12 @@ final class StatisticsViewController: UIViewController, StoryboardView {
     super.viewDidLoad()
   }
   
-  func bind(reactor: StatisticsViewReactor) {
+  func bind(reactor: StatisticsViewControllerReactor) {
     bindAction(reactor)
     bindState(reactor)
   }
   
-  private func bindAction(_ reactor: StatisticsViewReactor) {
+  private func bindAction(_ reactor: StatisticsViewControllerReactor) {
     // 위치 정보 받아오기 성공 노티피케이션 바인드
     NotificationCenter.default.rx.notification(.didSuccessUpdatingAllLocationTasks)
       .map { _ in Reactor.Action.handleLocationIfSuccess }
@@ -108,6 +108,7 @@ final class StatisticsViewController: UIViewController, StoryboardView {
     
     // viewDidAppear 바인드
     rx.viewDidAppear
+      .distinctUntilChanged()
       .map { _ in Reactor.Action.viewHasPresent }
       .bind(to: reactor.action)
       .disposed(by: disposeBag)
@@ -119,21 +120,10 @@ final class StatisticsViewController: UIViewController, StoryboardView {
       .disposed(by: disposeBag)
   }
   
-  private func bindState(_ reactor: StatisticsViewReactor) {
-    // viewDidAppear 상태 바인드.
-    reactor.state.map { $0.hasViewPresented }
-      .distinctUntilChanged()
-      .filter { $0 }
-      .subscribe(onNext: { isPresented in
-        
-      })
-      .disposed(by: disposeBag)
-    
+  private func bindState(_ reactor: StatisticsViewControllerReactor) {
     // 로딩 상태 바인드.
     reactor.state.map { $0.isLoading }
-      .debug("aabb")
       .distinctUntilChanged()
-      .debug("aabb2")
       .subscribe(onNext: { isLoading in
         if isLoading {
           ProgressIndicator.shared.show()
@@ -153,12 +143,13 @@ final class StatisticsViewController: UIViewController, StoryboardView {
     
     // 값 상태 바인드.
     reactor.state.map { $0.intakes }
-      .subscribe(onNext: { [weak self] totalFineDust, totalUltrafineDust, todayFineDust, todayUltrafineDust in
-        self?.fineDustTotalIntakes = [totalFineDust, [todayFineDust]].flatMap { $0 }
-        self?.ultrafineDustTotalIntakes = [totalUltrafineDust, [todayUltrafineDust]].flatMap { $0 }
-        self?.todayFineDustIntake = todayFineDust
-        self?.todayUltrafineDustIntake = todayUltrafineDust
-        self?.initializeSubviews()
+      .subscribe(
+        onNext: { [weak self] fineDusts, ultrafineDusts, todayFineDust, todayUltrafineDust in
+          self?.fineDustTotalIntakes = [fineDusts, [todayFineDust]].flatMap { $0 }
+          self?.ultrafineDustTotalIntakes = [ultrafineDusts, [todayUltrafineDust]].flatMap { $0 }
+          self?.todayFineDustIntake = todayFineDust
+          self?.todayUltrafineDustIntake = todayUltrafineDust
+          self?.initializeSubviews()
       })
       .disposed(by: disposeBag)
     

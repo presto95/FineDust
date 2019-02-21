@@ -137,7 +137,8 @@
 		C921D4C99DA13AEB953E512F475F15C2 /* SharedInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72325220894EE5896332E4971553A6F7 /* SharedInfo.swift */; };
 		B500997103DB43D02E812611C3454782 /* Statistics.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DC70CCB69DBB1D392CC698DA0DC29071 /* Statistics.storyboard */; };
 		28C9DFA76618224E645C133EFD9B1794 /* StatisticsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58AB4A60A90E8A065BBA6004FB187F89 /* StatisticsViewController.swift */; };
-		02B498ECF45CFBACBD50B089F5D3CF10 /* StatisticsViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC71B9E4BF84C8F25258822DEDB974A3 /* StatisticsViewReactor.swift */; };
+		56A50038818AF0ECBA1671F4925B2B23 /* StatisticsViewControllerReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F817D2CFEE831D5AC9907779B5664F /* StatisticsViewControllerReactor.swift */; };
+		9BA61264FC602E8BF8F9D85EFB80D71F /* StatisticsViewReactor+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216BEBC067F339A0849F463A501DCAE4 /* StatisticsViewReactor+.swift */; };
 		3C882D1CB80C04464440B93E9307E43B /* Storyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149E1E1DBA2DF694E0AE33D493CDE8F9 /* Storyboard.swift */; };
 		BFA9B24EA42B5531A4E033E71F4F8EDD /* String+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43A9E8FB49A9FF5D6049F1AA935B3EAD /* String+.swift */; };
 		DDBC9E24E6FA62BCE50C42347C9607A8 /* TestCoreDataIntakeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48590BBD3BFC373E6FB28BB30798BB45 /* TestCoreDataIntakeManager.swift */; };
@@ -376,7 +377,8 @@
 		72325220894EE5896332E4971553A6F7 /* SharedInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharedInfo.swift; sourceTree = "<group>"; };
 		DC70CCB69DBB1D392CC698DA0DC29071 /* Statistics.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Statistics.storyboard; sourceTree = "<group>"; };
 		58AB4A60A90E8A065BBA6004FB187F89 /* StatisticsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatisticsViewController.swift; sourceTree = "<group>"; };
-		DC71B9E4BF84C8F25258822DEDB974A3 /* StatisticsViewReactor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StatisticsViewReactor.swift; path = FineDust/Statistics/StatisticsViewReactor.swift; sourceTree = SOURCE_ROOT; };
+		B4F817D2CFEE831D5AC9907779B5664F /* StatisticsViewControllerReactor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StatisticsViewControllerReactor.swift; path = FineDust/Statistics/StatisticsViewControllerReactor.swift; sourceTree = SOURCE_ROOT; };
+		216BEBC067F339A0849F463A501DCAE4 /* StatisticsViewReactor+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StatisticsViewReactor+.swift"; sourceTree = "<group>"; };
 		149E1E1DBA2DF694E0AE33D493CDE8F9 /* Storyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Storyboard.swift; sourceTree = "<group>"; };
 		43A9E8FB49A9FF5D6049F1AA935B3EAD /* String+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+.swift"; sourceTree = "<group>"; };
 		48590BBD3BFC373E6FB28BB30798BB45 /* TestCoreDataIntakeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCoreDataIntakeManager.swift; sourceTree = "<group>"; };
@@ -471,7 +473,8 @@
 				5864F1281D74766589BFC74E7AE13ADE /* GraphDrawable.swift */,
 				DC70CCB69DBB1D392CC698DA0DC29071 /* Statistics.storyboard */,
 				58AB4A60A90E8A065BBA6004FB187F89 /* StatisticsViewController.swift */,
-				DC71B9E4BF84C8F25258822DEDB974A3 /* StatisticsViewReactor.swift */,
+				B4F817D2CFEE831D5AC9907779B5664F /* StatisticsViewControllerReactor.swift */,
+				216BEBC067F339A0849F463A501DCAE4 /* StatisticsViewReactor+.swift */,
 			);
 			path = Statistics;
 			sourceTree = "<group>";
@@ -587,6 +590,19 @@
 				5D3C478E3F0755E23B991CA642B7C90E /* FineDustWidget.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		25C29C13C7CFE05B67DC0260FEEC7B93 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				F1ACC2DAD57E26225CB1C2E0570AE3A0 /* Pods-FineDust.debug.xcconfig */,
+				8C54A97401E68A21EE5199E95F9FCC04 /* Pods-FineDust.release.xcconfig */,
+				7E90E42B5FC282AEC368DC78BE40EAD3 /* Pods-FineDustTests.debug.xcconfig */,
+				5EFB08369F0FBF8B7A03279D22066EF7 /* Pods-FineDustTests.release.xcconfig */,
+				0AEDFA583CCDEC06C070911ED4A5A21F /* Pods-FineDustWidget.debug.xcconfig */,
+				9739C9C601B5EB0F490B7AF7C3CFFD28 /* Pods-FineDustWidget.release.xcconfig */,
+			);
+			path = Pods;
 			sourceTree = "<group>";
 		};
 		2F83400986839F304CBBA92DC52E3AD2 /* Core Data */ = {
@@ -781,19 +797,6 @@
 				E3A84FA3E704F332AD12D46692A30CAD /* MockXMLDecoder.swift */,
 			);
 			path = Mock;
-			sourceTree = "<group>";
-		};
-		25C29C13C7CFE05B67DC0260FEEC7B93 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				F1ACC2DAD57E26225CB1C2E0570AE3A0 /* Pods-FineDust.debug.xcconfig */,
-				8C54A97401E68A21EE5199E95F9FCC04 /* Pods-FineDust.release.xcconfig */,
-				7E90E42B5FC282AEC368DC78BE40EAD3 /* Pods-FineDustTests.debug.xcconfig */,
-				5EFB08369F0FBF8B7A03279D22066EF7 /* Pods-FineDustTests.release.xcconfig */,
-				0AEDFA583CCDEC06C070911ED4A5A21F /* Pods-FineDustWidget.debug.xcconfig */,
-				9739C9C601B5EB0F490B7AF7C3CFFD28 /* Pods-FineDustWidget.release.xcconfig */,
-			);
-			path = Pods;
 			sourceTree = "<group>";
 		};
 		8C212B1139E96B3BA74BF5B54AB9EF23 /* Model */ = {
@@ -1094,6 +1097,45 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		59E6F24E5A0452919461496142A9094D /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-FineDust-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7228FB920B244F6FEED29E43DBB069BD /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\nswiftlint\nelse\necho \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
 		898FFE11B3D86AC1B923ADEA7D14B67C /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1124,24 +1166,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FineDust/Pods-FineDust-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		7228FB920B244F6FEED29E43DBB069BD /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if which swiftlint >/dev/null; then\nswiftlint\nelse\necho \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
-		};
-		59E6F24E5A0452919461496142A9094D /* [CP] Check Pods Manifest.lock */ = {
+		D1E81ADF4DFA3AF151076055A30EB904 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1156,7 +1181,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-FineDust-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-FineDustWidget-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1179,28 +1204,6 @@
 			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-FineDustTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		D1E81ADF4DFA3AF151076055A30EB904 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-FineDustWidget-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1315,7 +1318,8 @@
 				585EA738C1263AEEE97962712EA4788B /* ServiceErrorType.swift in Sources */,
 				C921D4C99DA13AEB953E512F475F15C2 /* SharedInfo.swift in Sources */,
 				28C9DFA76618224E645C133EFD9B1794 /* StatisticsViewController.swift in Sources */,
-				02B498ECF45CFBACBD50B089F5D3CF10 /* StatisticsViewReactor.swift in Sources */,
+				56A50038818AF0ECBA1671F4925B2B23 /* StatisticsViewControllerReactor.swift in Sources */,
+				9BA61264FC602E8BF8F9D85EFB80D71F /* StatisticsViewReactor+.swift in Sources */,
 				3C882D1CB80C04464440B93E9307E43B /* Storyboard.swift in Sources */,
 				BFA9B24EA42B5531A4E033E71F4F8EDD /* String+.swift in Sources */,
 				13DABA8D64DA1F3908824430DEBCB5ED /* Toast.swift in Sources */,

@@ -122,6 +122,7 @@ final class StatisticsViewController: UIViewController, StoryboardView {
   private func bindState(_ reactor: StatisticsViewReactor) {
     // viewDidAppear 상태 바인드.
     reactor.state.map { $0.hasViewPresented }
+      .distinctUntilChanged()
       .filter { $0 }
       .subscribe(onNext: { isPresented in
         
@@ -130,7 +131,7 @@ final class StatisticsViewController: UIViewController, StoryboardView {
     
     // 로딩 상태 바인드.
     reactor.state.map { $0.isLoading }
-      .debug()
+      .distinctUntilChanged()
       .subscribe(onNext: { isLoading in
         if isLoading {
           ProgressIndicator.shared.show()
@@ -142,6 +143,7 @@ final class StatisticsViewController: UIViewController, StoryboardView {
     
     // 세그먼티드 컨트롤 인덱스 상태 바인드.
     reactor.state.map { $0.segmentedControlIndex }
+      .distinctUntilChanged()
       .subscribe(onNext: { [weak self] _ in
         self?.initializeSubviews()
       })
@@ -149,7 +151,6 @@ final class StatisticsViewController: UIViewController, StoryboardView {
     
     // 값 상태 바인드.
     reactor.state.map { $0.intakes }
-      .distinct
       .subscribe(onNext: { [weak self] totalFineDust, totalUltrafineDust, todayFineDust, todayUltrafineDust in
         self?.fineDustTotalIntakes = [totalFineDust, [todayFineDust]].flatMap { $0 }
         self?.ultrafineDustTotalIntakes = [totalUltrafineDust, [todayUltrafineDust]].flatMap { $0 }

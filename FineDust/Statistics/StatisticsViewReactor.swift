@@ -79,12 +79,12 @@ final class StatisticsViewReactor: Reactor {
       return Observable.just(Mutation.setSegmentedControlIndex(index))
     case .handleLocationIfSuccess:
       return Observable.concat([
-        //Observable.just(Mutation.setLoadingStatus(true)),
+        Observable.just(Mutation.setLoadingStatus(true)),
         requestIntake().map { Mutation.setIntakes(totalFineDust: $0[0].0,
                                                  totalUltrafineDust: $0[1].0,
                                                  todayFineDust: $0[0].1,
-                                                 todayUltrafineDust: $0[1].1) }
-        //Observable.just(Mutation.setLoadingStatus(false))
+                                                 todayUltrafineDust: $0[1].1) },
+        Observable.just(Mutation.setLoadingStatus(false))
         ])
     case let .handleLocationIfFail(notification):
       return Observable.just(Mutation.handleIfFail(notification))

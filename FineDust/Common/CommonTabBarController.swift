@@ -17,6 +17,7 @@ final class CommonTabBarController: UITabBarController {
         if index == 1 {
           let navigationController = viewController as? UINavigationController
           let statisticsViewController = navigationController?.topViewController as? StatisticsViewController
+          print(statisticsViewController)
           statisticsViewController?.reactor = StatisticsViewReactor()
         }
       }

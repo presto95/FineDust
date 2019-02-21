@@ -14,71 +14,88 @@ import RxSwift
 
 final class StatisticsViewReactor: Reactor {
   
+  /// 흡입량 서비스.
   let intakeService: IntakeServiceType
+  
+  // MARK: Dependency Injection
   
   init(intakeService: IntakeServiceType = IntakeService()) {
     self.intakeService = intakeService
   }
   
+  // MARK: Action
+  
   enum Action {
-    case viewDidAppear
+    case viewHasPresent
     case changeSegmentedControlIndex(Int)
-    case handleLocation
+    case handleLocationIfSuccess
+    case handleLocationIfFail(Notification)
   }
   
+  // MARK: Mutation
+  
   enum Mutation {
-    case setPresentationStatus(Bool)
+    case setHasViewPresented(Bool)
     case setLoadingStatus(Bool)
     case setSegmentedControlIndex(Int)
-    case setValues(totalFineDust: [Int],
+    case setIntakes(totalFineDust: [Int],
       totalUltrafineDust: [Int],
       todayFineDust: Int,
       todayUltrafineDust: Int)
+    case handleIfFail(Notification)
   }
   
+  // MARK: State
+  
   struct State {
-    var isPresented: Bool = false
+    var hasViewPresented: Bool = false
     var isLoading: Bool = false
     var segmentedControlIndex: Int = 0
-    var values: (totalFineDust: [Int],
+    var intakes: (totalFineDust: [Int],
       totalUltrafineDust: [Int],
       todayFineDust: Int,
       todayUltrafineDust: Int) = ([], [], 0, 0)
+    var locationTaskError: LocationTaskError?
   }
   
   let initialState = State()
   
   func mutate(action: Action) -> Observable<Mutation> {
     switch action {
-    case .viewDidAppear:
+    case .viewHasPresent:
       return Observable.concat([
-        Observable.just(Mutation.setPresentationStatus(true)),
+        Observable.just(Mutation.setHasViewPresented(true)),
         //Observable.just(Mutation.setLoadingStatus(true)),
-        requestIntake().map { Mutation.setValues(totalFineDust: $0[0].0,
-                                                 totalUltrafineDust: $0[1].0,
-                                                 todayFineDust: $0[0].1,
-                                                 todayUltrafineDust: $0[1].1) },
+        requestIntake().map {
+          Mutation
+            .setIntakes(totalFineDust: $0[0].0,
+                       totalUltrafineDust: $0[1].0,
+                       todayFineDust: $0[0].1,
+                       todayUltrafineDust: $0[1].1)
+        },
         //Observable.just(Mutation.setLoadingStatus(false))
         ])
     case let .changeSegmentedControlIndex(index):
       return Observable.just(Mutation.setSegmentedControlIndex(index))
-    case .handleLocation:
+    case .handleLocationIfSuccess:
       return Observable.concat([
         //Observable.just(Mutation.setLoadingStatus(true)),
-        requestIntake().map { Mutation.setValues(totalFineDust: $0[0].0,
+        requestIntake().map { Mutation.setIntakes(totalFineDust: $0[0].0,
                                                  totalUltrafineDust: $0[1].0,
                                                  todayFineDust: $0[0].1,
-                                                 todayUltrafineDust: $0[1].1) },
+                                                 todayUltrafineDust: $0[1].1) }
         //Observable.just(Mutation.setLoadingStatus(false))
         ])
+    case let .handleLocationIfFail(notification):
+      return Observable.just(Mutation.handleIfFail(notification))
     }
   }
   
   func reduce(state: State, mutation: Mutation) -> State {
     var state = state
     switch mutation {
-    case let .setPresentationStatus(isPresented):
-      state.isPresented = isPresented
+    case let .setHasViewPresented(isPresented):
+      state.hasViewPresented = isPresented
       return state
     case let .setLoadingStatus(isLoading):
       state.isLoading = isLoading
@@ -86,12 +103,17 @@ final class StatisticsViewReactor: Reactor {
     case let .setSegmentedControlIndex(index):
       state.segmentedControlIndex = index
       return state
-    case let .setValues(totalFineDust, totalUltrafineDust, todayFineDust, todayUltrafineDust):
-      state.values = (totalFineDust, totalUltrafineDust, todayFineDust, todayUltrafineDust)
+    case let .setIntakes(totalFineDust, totalUltrafineDust, todayFineDust, todayUltrafineDust):
+      state.intakes = (totalFineDust, totalUltrafineDust, todayFineDust, todayUltrafineDust)
+      return state
+    case let .handleIfFail(notification):
+      state.locationTaskError = notification.locationTaskError
       return state
     }
   }
 }
+
+// MARK: - Private Method
 
 extension StatisticsViewReactor {
   
@@ -124,11 +146,10 @@ extension StatisticsViewReactor {
       }
       return Disposables.create()
     }
-    let zipped
-      = Observable
-        .zip(requestIntakesInWeekObservable,
-             requestTodayIntakesObservable) { (first, second) -> [([Int], Int)] in
-      return [(first.0, second.0), (first.1, second.1)]
+    let zipped = Observable
+      .zip(requestIntakesInWeekObservable,
+           requestTodayIntakesObservable) { (first, second) -> [([Int], Int)] in
+            return [(first.0, second.0), (first.1, second.1)]
     }
     return zipped
   }

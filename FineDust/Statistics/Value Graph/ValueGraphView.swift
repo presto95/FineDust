@@ -50,7 +50,7 @@ final class ValueGraphView: UIView {
   
   /// 기준 날짜로부터 7일간의 미세먼지 흡입량.
   private var intakeAmounts: [Int] {
-    return dataSource?.intakes ?? []
+    return dataSource?.intakeInWeek ?? []
   }
   
   /// 미세먼지 흡입량의 최대값.

@@ -64,26 +64,34 @@ final class StatisticsViewReactor: Reactor {
     switch action {
     case .viewHasPresent:
       return Observable.concat([
-        Observable.just(Mutation.setHasViewPresented(true)).debug(),
-        Observable.just(Mutation.setLoadingStatus(true)).debug(),
-        requestIntake().map {
-          Mutation
-            .setIntakes(totalFineDust: $0[0].0,
-                       totalUltrafineDust: $0[1].0,
-                       todayFineDust: $0[0].1,
-                       todayUltrafineDust: $0[1].1)
-        },
-        Observable.just(Mutation.setLoadingStatus(false)).debug()
-        ]).debug()
+        Observable.just(Mutation.setHasViewPresented(true)),
+        Observable.just(Mutation.setLoadingStatus(true)),
+        requestIntake()
+          .catchErrorJustReturn([([], 0)])
+          .map {
+            Mutation
+              .setIntakes(totalFineDust: $0[0].0,
+                          totalUltrafineDust: $0[1].0,
+                          todayFineDust: $0[0].1,
+                          todayUltrafineDust: $0[1].1)
+        }
+        .take(1),
+        Observable.just(Mutation.setLoadingStatus(false))
+        ]).debug("mutation viewHasPresent")
     case let .changeSegmentedControlIndex(index):
       return Observable.just(Mutation.setSegmentedControlIndex(index))
     case .handleLocationIfSuccess:
       return Observable.concat([
         Observable.just(Mutation.setLoadingStatus(true)),
-        requestIntake().map { Mutation.setIntakes(totalFineDust: $0[0].0,
-                                                 totalUltrafineDust: $0[1].0,
-                                                 todayFineDust: $0[0].1,
-                                                 todayUltrafineDust: $0[1].1) },
+        requestIntake()
+          .retry()
+          .map { Mutation.setIntakes(totalFineDust: $0[0].0,
+                                     totalUltrafineDust: $0[1].0,
+                                     todayFineDust: $0[0].1,
+                                     todayUltrafineDust: $0[1].1)
+            
+        }
+        .take(1),
         Observable.just(Mutation.setLoadingStatus(false))
         ])
     case let .handleLocationIfFail(notification):

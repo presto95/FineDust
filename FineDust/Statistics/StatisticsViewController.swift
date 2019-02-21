@@ -131,7 +131,9 @@ final class StatisticsViewController: UIViewController, StoryboardView {
     
     // 로딩 상태 바인드.
     reactor.state.map { $0.isLoading }
+      .debug("aabb")
       .distinctUntilChanged()
+      .debug("aabb2")
       .subscribe(onNext: { isLoading in
         if isLoading {
           ProgressIndicator.shared.show()

@@ -148,8 +148,8 @@ extension StatisticsViewReactor {
     }
     let zipped = Observable
       .zip(requestIntakesInWeekObservable,
-           requestTodayIntakesObservable) { (first, second) -> [([Int], Int)] in
-            return [(first.0, second.0), (first.1, second.1)]
+           requestTodayIntakesObservable) { (week, today) -> [([Int], Int)] in
+            return [(week.0, today.0), (week.1, today.1)]
     }
     return zipped
   }

@@ -149,6 +149,7 @@ final class StatisticsViewController: UIViewController, StoryboardView {
     
     // 값 상태 바인드.
     reactor.state.map { $0.intakes }
+      .distinct
       .subscribe(onNext: { [weak self] totalFineDust, totalUltrafineDust, todayFineDust, todayUltrafineDust in
         self?.fineDustTotalIntakes = [totalFineDust, [todayFineDust]].flatMap { $0 }
         self?.ultrafineDustTotalIntakes = [totalUltrafineDust, [todayUltrafineDust]].flatMap { $0 }
